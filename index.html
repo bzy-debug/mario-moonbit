@@ -262,7 +262,7 @@
     requestAnimationFrameId = requestAnimationFrame(update)
   }
 
-  WebAssembly.instantiateStreaming(fetch("target/build/main/main.wasm"), importObject).then(
+  WebAssembly.instantiateStreaming(fetch("target/wasm-gc/release/build/main/main.wasm"), importObject).then(
     (obj) => {
       obj.instance.exports._start();
       game_win = obj.instance.exports["mario/main::game_win"];
