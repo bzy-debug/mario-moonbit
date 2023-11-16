@@ -144,7 +144,8 @@
 
     window.addEventListener("keydown", (e) => {
       if (halt && e.keyCode === 32) {
-        window.location.reload();
+        halt = false;
+        start();
         return;
       }
 
@@ -293,24 +294,27 @@
       }
     }
 
-    WebAssembly.instantiateStreaming(
-      fetch("target/wasm-gc/release/build/main/main.wasm"),
-      importObject
-    ).then((obj) => {
-      obj.instance.exports._start();
-      game_win = obj.instance.exports["mario/main::game_win"];
-      game_lose = obj.instance.exports["mario/main::game_lose"];
-      game_update = obj.instance.exports["mario/main::game_update"];
-      keydown_up = obj.instance.exports["mario/main::keydown_up"];
-      keydown_down = obj.instance.exports["mario/main::keydown_down"];
-      keydown_left = obj.instance.exports["mario/main::keydown_left"];
-      keydown_right = obj.instance.exports["mario/main::keydown_right"];
-      keydown_B = obj.instance.exports["mario/main::keydown_B"];
-      keyup_up = obj.instance.exports["mario/main::keyup_up"];
-      keyup_down = obj.instance.exports["mario/main::keyup_down"];
-      keyup_left = obj.instance.exports["mario/main::keyup_left"];
-      keyup_right = obj.instance.exports["mario/main::keyup_right"];
-      requestAnimationFrameId = requestAnimationFrame(update);
-    });
+    function start() {
+      WebAssembly.instantiateStreaming(
+        fetch("target/wasm-gc/release/build/main/main.wasm"),
+        importObject
+      ).then((obj) => {
+        obj.instance.exports._start();
+        game_win = obj.instance.exports["mario/main::game_win"];
+        game_lose = obj.instance.exports["mario/main::game_lose"];
+        game_update = obj.instance.exports["mario/main::game_update"];
+        keydown_up = obj.instance.exports["mario/main::keydown_up"];
+        keydown_down = obj.instance.exports["mario/main::keydown_down"];
+        keydown_left = obj.instance.exports["mario/main::keydown_left"];
+        keydown_right = obj.instance.exports["mario/main::keydown_right"];
+        keydown_B = obj.instance.exports["mario/main::keydown_B"];
+        keyup_up = obj.instance.exports["mario/main::keyup_up"];
+        keyup_down = obj.instance.exports["mario/main::keyup_down"];
+        keyup_left = obj.instance.exports["mario/main::keyup_left"];
+        keyup_right = obj.instance.exports["mario/main::keyup_right"];
+        requestAnimationFrameId = requestAnimationFrame(update);
+      });
+    }
+    start();
   </script>
 </html>
