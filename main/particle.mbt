@@ -1,12 +1,10 @@
 struct ParticleParams {
   sprite : Sprite
-  rot : Double
   lifetime : Int
 }
 
 struct Particle {
   params : ParticleParams
-  part : Part
   pos : XY
   vel : XY
   acc : XY
@@ -18,22 +16,22 @@ fn XY::make(x : Double, y : Double) -> XY {
   { x, y }
 }
 
-fn make_params(sprite_params : SpriteParams, rot : Double, lifetime : Int) ->
+fn make_params(sprite_params : SpriteParams,  lifetime : Int) ->
      ParticleParams {
-  { sprite: Sprite::make_(sprite_params), rot, lifetime }
+  { sprite: Sprite::make_(sprite_params), lifetime }
 }
 
 fn ParticleParams::with_type(part : Part) -> ParticleParams {
   match part {
-    BrickChunkL as t => make_params(make_particle(t), 0.0, 300)
-    BrickChunkR as t => make_params(make_particle(t), 0.0, 300)
-    _ as t => make_params(make_particle(t), 0.0, 30)
+    BrickChunkL as t => make_params(make_particle(t),  300)
+    BrickChunkR as t => make_params(make_particle(t),  300)
+    _ as t => make_params(make_particle(t), 30)
   }
 }
 
 fn Particle::make(vel : XY, acc : XY, part : Part, pos : XY) -> Particle {
   let params = ParticleParams::with_type(part)
-  { params, part, pos, vel, acc, kill: false, life: params.lifetime }
+  { params, pos, vel, acc, kill: false, life: params.lifetime }
 }
 
 fn make_score(score : Int, pos : XY) -> Particle {
