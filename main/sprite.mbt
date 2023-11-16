@@ -284,7 +284,6 @@ fn make_item(item : Item) -> SpriteParams {
       (16.0, 16.0),
       (0.0, 80.0),
     )
-    FireFlower => setup_sprite_(items_, 1, 0, (16.0, 16.0), (0.0, 188.0))
     Mushroom => setup_sprite(
       true,
       (2.0, 0.0),
@@ -295,7 +294,6 @@ fn make_item(item : Item) -> SpriteParams {
       (16.0, 16.0),
       (0.0, 0.0),
     )
-    Star => setup_sprite_(items_, 1, 0, (16.0, 16.0), (16.0, 48.0))
   }
 }
 

@@ -43,8 +43,6 @@ enum PlayerSize {
 
 enum Item {
   Mushroom
-  FireFlower
-  Star
   Coin
 }
 

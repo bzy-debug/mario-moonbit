@@ -41,7 +41,7 @@ fn update_score(state : St, i : Int) {
   state.score = state.score + i
 }
 
-fn player_attack_enemy(s1 : Sprite, o1 : Object, typ : Enemy, s2 : Sprite,
+fn player_attack_enemy(o1 : Object, typ : Enemy, s2 : Sprite,
         o2 : Object, state : St) -> (Option[Collidable], Option[Collidable]) {
   o1.invuln = 10
   o1.jumping = false
@@ -72,7 +72,7 @@ fn player_attack_enemy(s1 : Sprite, o1 : Object, typ : Enemy, s2 : Sprite,
 }
 
 // (*enemy_attack_player is used when an enemy kills a player.*)
-fn enemy_attack_player(s1 : Sprite, o1 : Object, t2 : Enemy, s2 : Sprite,
+fn enemy_attack_player( o1 : Object, t2 : Enemy, s2 : Sprite,
         o2 : Object) -> (Option[Collidable], Option[Collidable]) {
   match t2 {
     GKoopaShell | RKoopaShell => {
@@ -134,45 +134,12 @@ fn col_enemy_enemy(t1 : Enemy, s1 : Sprite, o1 : Object, t2 : Enemy, s2 : Sprite
   }
 }
 
-// (* Gets the object at a given position *)
-fn obj_at_pos(dir : Dir1d, pos : XY, collids : List[Collidable]) ->
-     List[Collidable] {
-  match dir {
-    Left => collids.filter(
-      fn(col : Collidable) {
-        get_obj(col).pos.y == pos.y && get_obj(col).pos.x == pos.x - 16.0
-      },
-    )
-    Right => collids.filter(
-      fn(col : Collidable) {
-        get_obj(col).pos.y == pos.y && get_obj(col).pos.x == pos.x + 16.0
-      },
-    )
-  }
-}
-
-// (* Returns whether the object at a given position is a block *)
-fn is_block(dir : Dir1d, pos : XY, collids : List[Collidable]) -> Bool {
-  match obj_at_pos(dir, pos, collids) {
-    Cons(Block(_), _) => true
-    _ => false
-  }
-}
-
-// (* Returns whether the given object is a red koopa *)
-fn is_rkoopa(collid : Collidable) -> Bool {
-  match collid {
-    Enemy(RKoopa, _, _) => true
-    _ => false
-  }
-}
-
 // (* Run the broad phase object filtering *)
 fn broad_phase(collid : Collidable, all_collids : List[Collidable], state : St) ->
      List[Collidable] {
   let obj = get_obj(collid)
   all_collids.filter(
-    fn(c) {
+    fn(_c) {
       in_viewport(state.vpt, obj.pos) || is_player(collid) || out_of_viewport_below(
         state.vpt,
         obj.pos.y,
@@ -307,7 +274,7 @@ fn translate_keys() -> List[Control] {
 fn run_update_collid(state : St, collid : Collidable,
         all_collids : List[Collidable]) -> Collidable {
   match collid {
-    Player(t, s, o) as p => {
+    Player(_, s, o) as p => {
       let keys = translate_keys()
       o.crouch = false
       let player = match update_player(o, keys) {

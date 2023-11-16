@@ -75,8 +75,6 @@ fn makeplayer() -> ObjectParams {
 fn makeitem(item : Item) -> ObjectParams {
   match item {
     Mushroom => setup_objp()
-    FireFlower => setup_objp()
-    Star => setup_objp()
     Coin => setup_objp2(false, 1.0)
   }
 }
@@ -91,7 +89,7 @@ fn makeenemy(enemy : Enemy) -> ObjectParams {
   }
 }
 
-fn makeblock(block : Block) -> ObjectParams {
+fn makeblock() -> ObjectParams {
   setup_objp2(false, 1.0)
 }
 
@@ -100,7 +98,7 @@ fn make_type(spawn : Spawn) -> ObjectParams {
     Player(_) => makeplayer()
     Enemy(t) => makeenemy(t)
     Item(t) => makeitem(t)
-    Block(t) => makeblock(t)
+    Block(_) => makeblock()
   }
 }
 
@@ -268,14 +266,6 @@ fn process_obj(obj : Object, mapy : Double) {
   }
 }
 
-fn normalize_origin(pos : XY, spr : Sprite) {
-  let p = spr.params
-  let (box, boy) = p.bbox_offset
-  let (_, bh) = p.bbox_size
-  pos.x = pos.x - box
-  pos.y = pos.y - (boy + bh)
-}
-
 fn collide_block(check_x : Bool, dir : Dir2d, obj : Object) {
   match dir {
     North => {
@@ -374,18 +364,6 @@ fn evolve_block(obj : Object) -> Collidable {
   Block(QBlockUsed, new_spr, new_obj)
 }
 
-// (*Used for making a small Mario into a Big Mario*)
-fn evolve_player(spr : Sprite, obj : Object) -> Collidable {
-  let (new_spr, new_obj) = makeobj(
-    new_id(),
-    Left,
-    Player(Large, Standing),
-    obj.pos.x,
-    obj.pos.y,
-  )
-  normalize_pos(new_obj.pos, spr.params, new_spr.params)
-  Player(Large, new_spr, new_obj)
-}
 
 // (*Used for spawning items above question mark blocks*)
 fn spawn_above(player_dir : Dir1d, obj : Object, typ : Item) -> Collidable {
