@@ -334,11 +334,11 @@ fn update_helper(time : Double, state : St, objs : List[Collidable],
     let vpos_x_int = (state.vpt.pos.x / 5.0).to_int()
     let bgd_width = state.bgd.params.frame_size.0.to_int()
     draw_bgd(state.bgd, (vpos_x_int % bgd_width).to_double())
-    player.value = run_update_collid(state, player.value, objs)
-    if get_obj(player.value).kill {
+    players.value = players.value.map(fn(p) { run_update_collid(state, p, objs) })
+    if players.value.any(fn(p) {get_obj(p).kill}) {
       game_lose()
     } else {
-      state.vpt = update(state.vpt, get_obj(player.value).pos)
+      state.vpt = update(state.vpt, get_obj(players.value.at(0)).pos)
       _ := objs.map(fn(obj) { run_update_collid(state, obj, objs) })
       _ := parts.map(fn(part) { run_update_particle(state, part) })
       fps(fps_)

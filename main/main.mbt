@@ -2,9 +2,11 @@ let level_width : Double = 2400.0
 
 let level_height : Double = 256.0
 
-let temp : (Collidable, List[Collidable]) = generate(level_width, level_height)
+let player_count = 1
 
-let player : Ref[Collidable] = Ref::make(temp.0)
+let temp : (List[Collidable], List[Collidable]) = generate(player_count, level_width, level_height)
+
+let players : Ref[List[Collidable]] = Ref::make(temp.0)
 
 let objs : List[Collidable] = temp.1
 
@@ -18,7 +20,7 @@ let viewport : Viewport = Viewport::make({ x: cwidth, y: cheight }, map_dim)
 
 let state : St = {
   bgd: make_bgd(),
-  vpt: update(viewport, get_obj(player.value).pos),
+  vpt: update(viewport, get_obj(players.value.at(0)).pos),
   map: map_dim.y,
   score: 0,
   coins: 0,

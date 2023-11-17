@@ -68,3 +68,27 @@ fn concat[X](self : List[X], ys : List[X]) -> List[X] {
   }
 }
 
+fn any[X](self: List[X], predicate: (X) -> Bool) -> Bool {
+  match self {
+    Nil => false
+    Cons(x, xs) => predicate(x) || any(xs, predicate)
+  }
+}
+
+fn at[X](self: List[X], index: Int) -> X {
+  if index < 0 {
+    abort("invalid index")
+  }
+  fn at_helper(l: List[X], index: Int) -> X {
+    match l {
+      Nil => abort("invalid index")
+      Cons(x, xs) =>
+        if index == 0 {
+          x
+        } else {
+          at_helper(xs, index - 1)
+        }
+    }
+  }
+  at_helper(self, index)
+}
